@@ -11,7 +11,9 @@ environment:
       platform: "x86"
 
 init:
-  - ps: if ($env:appveyor_repo_branch -ne 'master') { $env:non_master = 'true' }
+- ps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+- ps: (New-Object Net.WebClient).DownloadFile('http://curl.haxx.se/ca/cacert.pem', "$env:temp\cacert.pem")
+- ps: $env:SSL_CERT_FILE = "$env:temp\cacert.pem"
 
 install:
   - SET "PATH=C:\Ruby%ruby_folder_version%\bin;%PATH%"
